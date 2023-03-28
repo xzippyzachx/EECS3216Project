@@ -1,8 +1,10 @@
 
 //Seperates value into each digit value
-module digitseparator (value, ones, tens);
-	input [0:7] value;
-	output reg [0:4] ones, tens;
+module digitseparator (
+	input int value,
+	output reg [0:4] ones,
+	output reg [0:4] tens
+	);
 
 	always @(value) begin
 		ones = (value % 10);

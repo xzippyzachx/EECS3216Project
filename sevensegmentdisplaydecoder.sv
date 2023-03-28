@@ -1,8 +1,9 @@
 
 //Seven Segment Display Decoder - 9 number digits
-module sevensegmentdisplaydecoder (dec, ledout);
-	input [0:3] dec;
-	output reg [1:7] ledout;
+module sevensegmentdisplaydecoder (
+	input [0:3] dec,
+	output reg [1:7] ledout
+	);
 	
 	always @(dec)
 		case (dec)

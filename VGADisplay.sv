@@ -1,7 +1,7 @@
 
 module VGADisplay (
 	input clock,		//50 MHz
-	input [1:0] system_state,
+	input fsm_state_t system_state,
 	input [0:7] timer,
 	output h_sync,
 	output v_sync,
@@ -85,19 +85,19 @@ module VGADisplay (
 		green <= 4'h00;
 		blue <= 4'h00;
 		
-		if (system_state == 0) 			// Idle
+		if (system_state == STATE_IDLE) 			// Idle
 		begin
 			red <= 4'h00;
 			green <= 4'hFF;
 			blue <= 4'h00;
 		end
-		else if (system_state == 1) 	// Armed
+		else if (system_state == STATE_SET) 	// Armed
 		begin
 			red <= 4'hCF;
 			green <= 4'h0F;
 			blue <= 4'h30;
 		end
-		else if (system_state == 2)	// Triggered
+		else if (system_state == STATE_TRIGGER)	// Triggered
 		begin
 			red <= 4'hFF;
 			green <= 4'h00;
@@ -235,7 +235,7 @@ module VGADisplay (
 			end
 			
 		end
-		else if (system_state == 3)	// Alerting
+		else if (system_state == STATE_ALERT)	// Alerting
 		begin
 			red <= 4'hFF;
 			green <= 4'hFF;
