@@ -15,6 +15,9 @@ module VGADisplay (
 	reg [1:7] countdown_tens_7seg;
 	reg [1:7] countdown_ones_7seg;
 	
+	reg flash = 0;
+	int flash_counter = 0;
+	
 	reg [9:0] x_counter = 0;
 	reg [9:0] y_counter = 0;
 	reg [9:0] red = 0;
@@ -72,7 +75,22 @@ module VGADisplay (
 	//Main Update Loop
 	always @ (posedge clock_120Hz)
 	begin
+				
+		if (system_state == STATE_ALERT)	// Alerting
+		begin
+			flash_counter <= flash_counter + 1;
 		
+			if(flash_counter == 30)
+			begin
+				flash <= ~flash;
+				flash_counter <= 0;
+			end
+		end
+		else
+		begin
+			flash <= 0;
+			flash_counter <= 0;
+		end
 		
 	end
 	
@@ -237,9 +255,18 @@ module VGADisplay (
 		end
 		else if (system_state == STATE_ALERT)	// Alerting
 		begin
-			red <= 4'hFF;
-			green <= 4'hFF;
-			blue <= 4'hFF;
+			if(flash)
+			begin
+				red <= 4'hFF;
+				green <= 4'hFF;
+				blue <= 4'hFF;
+			end
+			else
+			begin
+				red <= 4'hFF;
+				green <= 4'h00;
+				blue <= 4'h00;
+			end
 		end
 	
 	end
