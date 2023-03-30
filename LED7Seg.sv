@@ -2,8 +2,8 @@ module LED7Seg(
 	input clk,
 	input fsm_state_t system_state,	
 	input int timer, 
-	input logic [0:3] current_value,
-	output logic [9:0] led,
+	input logic [3:0] current_value,
+	output logic [9:6] led, // TODO: Changed to only use left 4 LEDs, to use others for debugging other states. Change back once passcode can be displayed elsewhere.
 	output logic [1:7] hexl1,
 	output logic [1:7] hexl2,
 	output logic [1:7] hexr
@@ -20,7 +20,7 @@ module LED7Seg(
 				led1 <= 10'b0000000000;
 			end
 			STATE_SET: begin
-				led1 <= 10'b1111111111;
+				led1 <= 10'b0101010101; //TODO: Changed to differentiate between SET and TRIGGER. Can change back later. 
 			end
 			STATE_TRIGGER: begin
 				led1 <= 10'b1111111111;
@@ -35,8 +35,6 @@ module LED7Seg(
 			end
 		endcase
 	end
-	
-
 	
 	assign led = led1;
 	digitseparator(timer, ones, tens);

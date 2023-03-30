@@ -1,7 +1,7 @@
 
 //Seven Segment Display Decoder - 9 number digits
 module sevensegmentdisplaydecoder (
-	input [0:3] dec,
+	input [3:0] dec,
 	output reg [1:7] ledout
 	);
 	
@@ -17,5 +17,6 @@ module sevensegmentdisplaydecoder (
 			7: ledout = 7'b0001111;
 			8: ledout = 7'b0000000;
 			9: ledout = 7'b0000100;
+			default: ledout = 7'b0000001;
 		endcase
 endmodule
