@@ -271,7 +271,7 @@ module VGADisplay (
 			end
 		end
 		
-		//Passcode digits		
+		// Passcode digits		
 		if (system_state == STATE_SET || system_state == STATE_TRIGGER) 	// Armed or Triggered
 		begin
 			
@@ -312,6 +312,61 @@ module VGADisplay (
 				end
 			end
 				
+		end
+		
+		
+		// Corners
+		// Top Left
+		if (y_counter >= y_start && y_counter <= y_start + 10 && x_counter >= x_start && x_counter <= x_start + 40)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		if (y_counter >= y_start + 10 && y_counter <= y_start + 40 && x_counter >= x_start && x_counter <= x_start + 10)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		//Top Right
+		if (y_counter >= y_start && y_counter <= y_start + 10 && x_counter >= x_start + screen_width - 40 && x_counter <= x_start + screen_width)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		if (y_counter >= y_start + 10 && y_counter <= y_start + 40 && x_counter >= x_start + screen_width - 10 && x_counter <= x_start + screen_width)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		// Bottom Left
+		if (y_counter >= y_start + screen_height - 40 && y_counter <= y_start + screen_height && x_counter >= x_start && x_counter <= x_start + 10)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		if (y_counter >= y_start + screen_height - 10 && y_counter <= y_start + screen_height && x_counter >= x_start && x_counter <= x_start + 40)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		// Bottom Right
+		if (y_counter >= y_start + screen_height - 40 && y_counter <= y_start + screen_height && x_counter >= x_start + screen_width - 10 && x_counter <= x_start + screen_width)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		if (y_counter >= y_start + screen_height - 10 && y_counter <= y_start + screen_height && x_counter >= x_start + screen_width - 40 && x_counter <= x_start + screen_width)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
 		end
 	
 	end
