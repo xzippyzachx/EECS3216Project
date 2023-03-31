@@ -1,4 +1,4 @@
-module Passcode(input btn0, input[3:0] SW, input wire clk, input integer timer, output wire passcode_correct, output wire[3:0] led);
+module Passcode(input btn0, input[3:0] SW, input wire clk, input integer timer, output wire passcode_correct, output wire[2:0] passcode_state, output wire[3:0] led);
 	
 	//Passcode
 	parameter[3:0] A = 4'b0001;
@@ -22,6 +22,7 @@ module Passcode(input btn0, input[3:0] SW, input wire clk, input integer timer, 
 	wire one_shot;
 	wire btnInv;
 	assign btnInv = ~btn0;
+	assign passcode_state = state;
 	
 //	const integer tMax = 20*50000000 - 1;
 //	logic[31:0] t;
@@ -50,7 +51,7 @@ module Passcode(input btn0, input[3:0] SW, input wire clk, input integer timer, 
 						passcode_correct = 1'b0;
 						nextState = sDig2Corr;
 					end
-					else if ((oneShotBtn==1'b1 & SW!=B) | timer == 20) begin
+					else if ((oneShotBtn==1'b1 & SW!=B) | timer == 0) begin
 						passcode_correct = 1'b0;
 						nextState = sIdle;
 					end
@@ -65,7 +66,7 @@ module Passcode(input btn0, input[3:0] SW, input wire clk, input integer timer, 
 						passcode_correct = 1'b0;
 						nextState = sDig3Corr;
 					end
-					else if ((oneShotBtn==1'b1 & SW!=C) | timer == 20) begin
+					else if ((oneShotBtn==1'b1 & SW!=C) | timer == 0) begin
 						passcode_correct = 1'b0;
 						nextState = sIdle;
 					end
@@ -80,7 +81,7 @@ module Passcode(input btn0, input[3:0] SW, input wire clk, input integer timer, 
 						passcode_correct = 1'b0;
 						nextState = sDig4Corr;
 					end
-					else if ((oneShotBtn==1'b1 & SW!=D) | timer == 20) begin
+					else if ((oneShotBtn==1'b1 & SW!=D) | timer == 0) begin
 						passcode_correct = 1'b0;
 						nextState = sIdle;
 					end

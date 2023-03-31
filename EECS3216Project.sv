@@ -20,13 +20,14 @@ module EECS3216Project (
 	
 	fsm_state_t system_state;
 	integer seconds_timer;
+	wire [2:0] passcode_state;
 	
 	LED7Seg(clock, system_state, seconds_timer, SW, leds[9:6], hexl1, hexl2, hexlr);
 	
-	VGADisplay(clock, system_state, seconds_timer, h_sync, v_sync, red_ouput, blue_ouput, green_ouput);
+	VGADisplay(clock, system_state, passcode_state, seconds_timer, h_sync, v_sync, red_ouput, blue_ouput, green_ouput);
 	
 	SystemState(clock, rst, btn1, swLaser, passcode_correct, system_state, seconds_timer);
 	
-	Passcode(btn0, SW, clock, seconds_timer, passcode_correct, leds[3:0]);
+	Passcode(btn0, SW, clock, seconds_timer, passcode_correct, passcode_state, leds[3:0]);
 
 endmodule

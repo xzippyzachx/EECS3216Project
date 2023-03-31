@@ -2,6 +2,7 @@
 module VGADisplay (
 	input clock,		//50 MHz
 	input fsm_state_t system_state,
+	input [2:0] passcode_state,
 	input [0:7] timer,
 	output h_sync,
 	output v_sync,
@@ -9,6 +10,7 @@ module VGADisplay (
 	output [3:0] blue_ouput,
 	output [3:0] green_ouput
 	);
+	parameter[2:0] sIdle = 3'd0, sDig1Corr = 3'd1,  sDig2Corr = 3'd2, sDig3Corr = 3'd3, sDig4Corr = 3'd4;
 	
 	reg [0:4] countdown_tens;
 	reg [0:4] countdown_ones;
@@ -267,6 +269,49 @@ module VGADisplay (
 				green <= 4'h00;
 				blue <= 4'h00;
 			end
+		end
+		
+		//Passcode digits		
+		if (system_state == STATE_SET || system_state == STATE_TRIGGER) 	// Armed or Triggered
+		begin
+			
+			if (passcode_state == sDig1Corr || passcode_state == sDig2Corr || passcode_state == sDig3Corr || passcode_state == sDig4Corr)
+			begin
+				if (y_counter >= y_start + 420 && y_counter <= y_start + 440 && x_counter >= x_start + 250 && x_counter <= x_start + 270)
+				begin
+					red <= 4'hFF;
+					green <= 4'hFF;
+					blue <= 4'hFF;
+				end
+			end
+			if (passcode_state == sDig2Corr || passcode_state == sDig3Corr || passcode_state == sDig4Corr)
+			begin
+				if (y_counter >= y_start + 420 && y_counter <= y_start + 440 && x_counter >= x_start + 290 && x_counter <= x_start + 310)
+				begin
+					red <= 4'hFF;
+					green <= 4'hFF;
+					blue <= 4'hFF;
+				end
+			end
+			if (passcode_state == sDig3Corr || passcode_state == sDig4Corr)
+			begin
+				if (y_counter >= y_start + 420 && y_counter <= y_start + 440 && x_counter >= x_start + 330 && x_counter <= x_start + 350)
+				begin
+					red <= 4'hFF;
+					green <= 4'hFF;
+					blue <= 4'hFF;
+				end
+			end
+			if (passcode_state == sDig4Corr)
+			begin
+				if (y_counter >= y_start + 420 && y_counter <= y_start + 440 && x_counter >= x_start + 370 && x_counter <= x_start + 390)
+				begin
+					red <= 4'hFF;
+					green <= 4'hFF;
+					blue <= 4'hFF;
+				end
+			end
+				
 		end
 	
 	end
