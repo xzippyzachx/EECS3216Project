@@ -46,7 +46,7 @@ module SystemState(
 				end
 			STATE_TRIGGER:
 				begin
-					if (laser_triggered == 1'b0 & passcode_correct == 1'b1 & seconds_timer < 20) begin
+					if (passcode_correct == 1'b1 & seconds_timer < 20) begin
 						nextState = STATE_IDLE;
 					end
 					else if (passcode_correct == 1'b0 & seconds_timer >= 20) begin
