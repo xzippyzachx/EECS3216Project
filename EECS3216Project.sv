@@ -29,7 +29,7 @@ module EECS3216Project (
 		
 	SystemState(clk2, rst, btn1, laser_triggered, passcode_correct, system_state, seconds_timer);
 	
-  VGADisplay(clk2, system_state, passcode_state, seconds_timer, h_sync, v_sync, red_ouput, blue_ouput, green_ouput);
+   VGADisplay(clk2, system_state, passcode_state, seconds_timer, h_sync, v_sync, red_ouput, blue_ouput, green_ouput);
 	
 	Passcode(btn0, SW, clk2, seconds_timer, passcode_correct, passcode_state, leds[3:0]);
 
