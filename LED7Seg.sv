@@ -38,8 +38,8 @@ module LED7Seg(
 	
 	assign led = led1;
 	digitseparator(timer, ones, tens);
-	sevensegmentdisplaydecoder disp1(ones, hexl2);
-	sevensegmentdisplaydecoder disp2(tens, hexl1);
-	sevensegmentdisplaydecoder disp3(current_value, hexr);
+	sevensegmentdisplaydecoder disp1((system_state == STATE_TRIGGER), ones, hexl2);
+	sevensegmentdisplaydecoder disp2((system_state == STATE_TRIGGER), tens, hexl1);
+	sevensegmentdisplaydecoder disp3(1'b1, current_value, hexr);
 	
 endmodule

@@ -74,8 +74,8 @@ module VGADisplay (
 	
 	digitseparator(timer, countdown_ones, countdown_tens);
 	
-	sevensegmentdisplaydecoder tensDigit(countdown_tens, countdown_tens_7seg);
-	sevensegmentdisplaydecoder onesDigit(countdown_ones, countdown_ones_7seg);
+	sevensegmentdisplaydecoder tensDigit(1'b1, countdown_tens, countdown_tens_7seg);
+	sevensegmentdisplaydecoder onesDigit(1'b1, countdown_ones, countdown_ones_7seg);
 			
 	
 	//Main Update Loop
