@@ -18,7 +18,7 @@ module SystemState(
 	initial begin
 		system_state = STATE_IDLE;
 		t = 0;
-		seconds_timer = 0;
+		seconds_timer = 20;
 	end
 	
 	always @(posedge clk) begin
@@ -46,10 +46,10 @@ module SystemState(
 				end
 			STATE_TRIGGER:
 				begin
-					if (passcode_correct == 1'b1 & seconds_timer < 20) begin
+					if (passcode_correct == 1'b1 & seconds_timer > 0) begin
 						nextState = STATE_IDLE;
 					end
-					else if (passcode_correct == 1'b0 & seconds_timer >= 20) begin
+					else if (passcode_correct == 1'b0 & seconds_timer <= 0) begin
 						nextState = STATE_ALERT;
 					end
 					else begin
@@ -73,11 +73,11 @@ module SystemState(
 	always_ff @(posedge clk) begin
 		if (system_state != nextState) begin
 			t <= 0;
-			seconds_timer <= 0;
+			seconds_timer <= 20;
 		end
 		else begin
 			if (t != tMax) t = t + 1; //NOTE: Seems to need to be '=' and not '<=' for seconds to count. (need to wait for t=t+1 to occur??)
-			if (system_state==STATE_TRIGGER & t != 0 & t % (clkCycle-1)==0) seconds_timer = seconds_timer + 1;
+			if (system_state==STATE_TRIGGER & t != 0 & t % (clkCycle-1)==0) seconds_timer = seconds_timer - 1;
 		end
 	end
 	
