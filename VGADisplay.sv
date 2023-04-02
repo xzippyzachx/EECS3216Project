@@ -34,6 +34,8 @@ module VGADisplay (
 	wire clock_25MHz;
 	wire clock_120Hz;
 	
+	// << This code was referenced from: https://github.com/dominic-meads/Quartus-Projects/tree/main/VGA_face
+	
 	reg reset = 0;
 	clockdivider(
 		.areset(reset),
@@ -43,7 +45,7 @@ module VGADisplay (
 	);
 	
 	clockdivider_120Hz(clock, clock_120Hz);
-		
+	
 	// counter and sync generation
 	always @(posedge clock_25MHz)  // horizontal counter
 	begin 
@@ -67,6 +69,8 @@ module VGADisplay (
 	// hsync and vsync output assignments
 	assign h_sync = (x_counter >= 0 && x_counter < 96) ? 1:0;  // hsync high for 96 counts
 	assign v_sync = (y_counter >= 0 && y_counter < 2) ? 1:0;   // vsync high for 2 counts
+	
+	// >> End of code referenced
 	
 	digitseparator(timer, countdown_ones, countdown_tens);
 	
@@ -371,10 +375,14 @@ module VGADisplay (
 	
 	end
 	
+	// << This code was referenced from: https://github.com/dominic-meads/Quartus-Projects/tree/main/VGA_face
+	
 	// Color output assignments
 	assign red_ouput = (x_counter > 144 && x_counter <= 783 && y_counter > 35 && y_counter <= 514) ? red : 4'h0;
 	assign green_ouput = (x_counter > 144 && x_counter <= 783 && y_counter > 35 && y_counter <= 514) ? green : 4'h0;
-	assign blue_ouput = (x_counter > 144 && x_counter <= 783 && y_counter > 35 && y_counter <= 514) ? blue : 4'h0;	
+	assign blue_ouput = (x_counter > 144 && x_counter <= 783 && y_counter > 35 && y_counter <= 514) ? blue : 4'h0;
+	
+	// >> End of code referenced
 	
 endmodule
 
