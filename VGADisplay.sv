@@ -2,6 +2,7 @@
 module VGADisplay (
 	input clock,		//50 MHz
 	input fsm_state_t system_state,
+	input [2:0] passcode_state,
 	input [0:7] timer,
 	output h_sync,
 	output v_sync,
@@ -9,6 +10,7 @@ module VGADisplay (
 	output [3:0] blue_ouput,
 	output [3:0] green_ouput
 	);
+	parameter[2:0] sIdle = 3'd0, sDig1Corr = 3'd1,  sDig2Corr = 3'd2, sDig3Corr = 3'd3, sDig4Corr = 3'd4;
 	
 	reg [0:4] countdown_tens;
 	reg [0:4] countdown_ones;
@@ -32,6 +34,8 @@ module VGADisplay (
 	wire clock_25MHz;
 	wire clock_120Hz;
 	
+	// << This code was referenced from: https://github.com/dominic-meads/Quartus-Projects/tree/main/VGA_face
+	
 	reg reset = 0;
 	clockdivider(
 		.areset(reset),
@@ -41,7 +45,7 @@ module VGADisplay (
 	);
 	
 	clockdivider_120Hz(clock, clock_120Hz);
-		
+	
 	// counter and sync generation
 	always @(posedge clock_25MHz)  // horizontal counter
 	begin 
@@ -66,10 +70,12 @@ module VGADisplay (
 	assign h_sync = (x_counter >= 0 && x_counter < 96) ? 1:0;  // hsync high for 96 counts
 	assign v_sync = (y_counter >= 0 && y_counter < 2) ? 1:0;   // vsync high for 2 counts
 	
+	// >> End of code referenced
+	
 	digitseparator(timer, countdown_ones, countdown_tens);
 	
-	sevensegmentdisplaydecoder tensDigit(countdown_tens, countdown_tens_7seg);
-	sevensegmentdisplaydecoder onesDigit(countdown_ones, countdown_ones_7seg);
+	sevensegmentdisplaydecoder tensDigit(1'b1, countdown_tens, countdown_tens_7seg);
+	sevensegmentdisplaydecoder onesDigit(1'b1, countdown_ones, countdown_ones_7seg);
 			
 	
 	//Main Update Loop
@@ -268,13 +274,115 @@ module VGADisplay (
 				blue <= 4'h00;
 			end
 		end
+		
+		// Passcode digits		
+		if (system_state == STATE_SET || system_state == STATE_TRIGGER) 	// Armed or Triggered
+		begin
+			
+			if (passcode_state == sDig1Corr || passcode_state == sDig2Corr || passcode_state == sDig3Corr || passcode_state == sDig4Corr)
+			begin
+				if (y_counter >= y_start + 420 && y_counter <= y_start + 440 && x_counter >= x_start + 250 && x_counter <= x_start + 270)
+				begin
+					red <= 4'hFF;
+					green <= 4'hFF;
+					blue <= 4'hFF;
+				end
+			end
+			if (passcode_state == sDig2Corr || passcode_state == sDig3Corr || passcode_state == sDig4Corr)
+			begin
+				if (y_counter >= y_start + 420 && y_counter <= y_start + 440 && x_counter >= x_start + 290 && x_counter <= x_start + 310)
+				begin
+					red <= 4'hFF;
+					green <= 4'hFF;
+					blue <= 4'hFF;
+				end
+			end
+			if (passcode_state == sDig3Corr || passcode_state == sDig4Corr)
+			begin
+				if (y_counter >= y_start + 420 && y_counter <= y_start + 440 && x_counter >= x_start + 330 && x_counter <= x_start + 350)
+				begin
+					red <= 4'hFF;
+					green <= 4'hFF;
+					blue <= 4'hFF;
+				end
+			end
+			if (passcode_state == sDig4Corr)
+			begin
+				if (y_counter >= y_start + 420 && y_counter <= y_start + 440 && x_counter >= x_start + 370 && x_counter <= x_start + 390)
+				begin
+					red <= 4'hFF;
+					green <= 4'hFF;
+					blue <= 4'hFF;
+				end
+			end
+				
+		end
+		
+		
+		// Corners
+		// Top Left
+		if (y_counter >= y_start && y_counter <= y_start + 10 && x_counter >= x_start && x_counter <= x_start + 40)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		if (y_counter >= y_start + 10 && y_counter <= y_start + 40 && x_counter >= x_start && x_counter <= x_start + 10)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		//Top Right
+		if (y_counter >= y_start && y_counter <= y_start + 10 && x_counter >= x_start + screen_width - 40 && x_counter <= x_start + screen_width)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		if (y_counter >= y_start + 10 && y_counter <= y_start + 40 && x_counter >= x_start + screen_width - 10 && x_counter <= x_start + screen_width)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		// Bottom Left
+		if (y_counter >= y_start + screen_height - 40 && y_counter <= y_start + screen_height && x_counter >= x_start && x_counter <= x_start + 10)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		if (y_counter >= y_start + screen_height - 10 && y_counter <= y_start + screen_height && x_counter >= x_start && x_counter <= x_start + 40)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		// Bottom Right
+		if (y_counter >= y_start + screen_height - 40 && y_counter <= y_start + screen_height && x_counter >= x_start + screen_width - 10 && x_counter <= x_start + screen_width)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
+		if (y_counter >= y_start + screen_height - 10 && y_counter <= y_start + screen_height && x_counter >= x_start + screen_width - 40 && x_counter <= x_start + screen_width)
+		begin
+			red <= 4'hFF;
+			green <= 4'hFF;
+			blue <= 4'hFF;
+		end
 	
 	end
+	
+	// << This code was referenced from: https://github.com/dominic-meads/Quartus-Projects/tree/main/VGA_face
 	
 	// Color output assignments
 	assign red_ouput = (x_counter > 144 && x_counter <= 783 && y_counter > 35 && y_counter <= 514) ? red : 4'h0;
 	assign green_ouput = (x_counter > 144 && x_counter <= 783 && y_counter > 35 && y_counter <= 514) ? green : 4'h0;
-	assign blue_ouput = (x_counter > 144 && x_counter <= 783 && y_counter > 35 && y_counter <= 514) ? blue : 4'h0;	
+	assign blue_ouput = (x_counter > 144 && x_counter <= 783 && y_counter > 35 && y_counter <= 514) ? blue : 4'h0;
+	
+	// >> End of code referenced
 	
 endmodule
 
